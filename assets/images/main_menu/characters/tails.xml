@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Free texture packer v0.6.7 http://free-tex-packer.com -->
+
+<TextureAtlas imagePath="tails.png" width="267" height="722">
+  <SubTexture name="tailsNormal0000" x="0" y="0"  width="267" height="361" frameX="-0" frameY="-0" frameWidth="267" frameHeight="361"/>
+  <SubTexture name="tailsScary0000" x="0" y="361"  width="267" height="361" frameX="-0" frameY="-0" frameWidth="267" frameHeight="361"/>
+</TextureAtlas>
