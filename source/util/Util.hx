@@ -3,14 +3,14 @@ package util;
 @:publicFields
 class Util {
 
-  inline static function trueTextScale(number:Int = 12):Int {
+  static function trueTextScale(number:Int = 12):Int {
     var remain:Int = number % 12;
     if (remain != 0) number += 12 - remain;
     var bounds:lime.math.Rectangle = openfl.Lib.application.window.display.bounds;
     return Math.ceil(number * Math.min(FlxG.width / bounds.width, FlxG.height / bounds.height));
   }
 
-  inline static function scanDirectory(directory:String, scanfor:String = '.png'):Array<String> {
+  static function scanDirectory(directory:String, scanfor:String = '.png'):Array<String> {
     directory = 'assets/$directory';
     var result:Array<String> = [];
     if (FileSystem.exists(directory) && FileSystem.isDirectory(directory)) {

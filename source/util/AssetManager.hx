@@ -18,7 +18,7 @@ class AssetManager {
 	static var trackedAudio:Map<String, Sound> = [];
   static var localAssets:Array<String> = [];
 
-	inline static function clearUnused():Void {
+	static function clearUnused():Void {
 		for (key in trackedGraphics.keys()) {
 			if (!localAssets.contains(key) && FlxG.bitmap._cache.exists(key)) {
 				destroyGraphic(trackedGraphics.get(key));
@@ -28,7 +28,7 @@ class AssetManager {
 		openfl.system.System.gc();
 	}
 
-	inline static function clearUsed():Void {
+	static function clearUsed():Void {
 		for (key in FlxG.bitmap._cache.keys())
 			if (!trackedGraphics.exists(key))
 				destroyGraphic(FlxG.bitmap.get(key));
@@ -44,30 +44,13 @@ class AssetManager {
 		localAssets = [];
 	}
 
-	inline static function destroyGraphic(graphic:FlxGraphic):Void {
-		FlxG.bitmap.remove(graphic);
-		if (graphic != null) {
-			if (graphic.bitmap != null) {
-				if (graphic.bitmap.__texture != null) {
-					graphic.bitmap.__texture.dispose();
-					graphic.bitmap.__texture = null;
-				}
-				if (graphic.bitmap.image != null) {
-					graphic.bitmap.image.data = null;
-					graphic.bitmap.image = null;
-				}
-				graphic.bitmap.dispose();
-				graphic.bitmap.disposeImage();
-				graphic.bitmap = null;
-			}
-			graphic.persist = false;
-			graphic.destroyOnNoUse = true;
-			graphic.destroy();
-			graphic = null;
-		}
+	static function destroyGraphic(graphic:FlxGraphic):Void {
+		graphic.destroyOnNoUse = true;
+		graphic.persist = false;
+		graphic.decrementUseCount();
 	}
 
-  inline static function getImage(key:String):FlxGraphic {
+  static function getImage(key:String):FlxGraphic {
     key += '.png';
 
     if (trackedGraphics.exists(key))
@@ -89,15 +72,15 @@ class AssetManager {
     return FlxG.bitmap.addGraphic(graphic);
   }
 
-	inline static function getSparrow(key:String):FlxAtlasFrames {
+	static function getSparrow(key:String):FlxAtlasFrames {
 		return FlxAtlasFrames.fromSparrow(getImage(key), 'assets/images/$key.xml');
 	}
 
-	inline static function getSound(key:String):Sound {
+	static function getSound(key:String):Sound {
 		return getOgg('sounds/$key');
 	}
 
-	inline static function getMusic(key:String):Sound {
+	static function getMusic(key:String):Sound {
 		return getOgg('music/$key');
 	}
 
@@ -118,7 +101,7 @@ class AssetManager {
 		return trackedAudio.get(file);
 	}
 
-	inline static function getFont(key:String):String {
+	static function getFont(key:String):String {
 		return 'assets/fonts/$key.ttf';
 	}
 

@@ -8,12 +8,11 @@ package debug.memory;
  */
 @:publicFields
 #if cpp
-@:buildXml('<include name="../../../source/debug/memory/build.xml" />')
+@:buildXml('<include name="../../../source/debug/memory/build.xml"/>')
 @:include('memory.h')
 extern
 #end
-class Memory
-{
+class Memory {
 	/**
 	 * Returns the peak (maximum so far) resident set size (physical
 	 * memory use) measured in bytes, or zero if the value cannot be
@@ -61,4 +60,5 @@ class Memory
 	inline static function getGarbageCollection():Float {
 		return #if hl hl.Gc.stats().currentMemory #else openfl.system.System.totalMemory #end;
 	}
+
 }

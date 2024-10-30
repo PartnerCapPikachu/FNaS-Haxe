@@ -8,7 +8,7 @@ The config overrides a few global OpenALSoft settings with the aim of improving 
 */
 @:keep class ALSoftConfig {
 	#if desktop
-	inline public static function __init__():Void {
+	public static function __init__():Void {
 		var origin:String = #if hl Sys.getCwd() #else Sys.programPath() #end;
 		var configPath:String = origin.withoutExtension().directory();
 		#if windows

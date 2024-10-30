@@ -27,7 +27,7 @@ class FPSCounter extends openfl.text.TextField {
 		if (showMemoryStats) {
 			var memoryMegas:String = formatBytes(Memory.getCurrentUsage());
 			var gpuMegas:String = formatBytes(Memory.getGPUUsage());
-			var garbageMemoryMegas:String = formatBytes(openfl.system.System.totalMemory);
+			var garbageMemoryMegas:String = formatBytes(Memory.getGarbageCollection());
 			text += '\nMemory: $memoryMegas\nGPU: $gpuMegas\nGarbage: $garbageMemoryMegas';
 		}
 
@@ -36,7 +36,7 @@ class FPSCounter extends openfl.text.TextField {
 	}
 
 	var unitsOfMemory:Array<String> = ['', 'K', 'M', 'G', 'T', 'P'];
-	inline function formatBytes(memoryToFormat:Float):String {
+	function formatBytes(memoryToFormat:Float):String {
 		var index:Int = 0;
 		while (memoryToFormat >= 1000) {
 			memoryToFormat *= .001;
