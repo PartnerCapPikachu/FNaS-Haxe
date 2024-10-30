@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Free texture packer v0.6.7 http://free-tex-packer.com -->
-
-<TextureAtlas imagePath="sonic.png" width="130" height="726">
-  <SubTexture name="sonicNormal0000" x="0" y="0"  width="130" height="363" frameX="-0" frameY="-0" frameWidth="130" frameHeight="363"/>
-  <SubTexture name="sonicScary0000" x="0" y="363"  width="130" height="363" frameX="-0" frameY="-0" frameWidth="130" frameHeight="363"/>
-</TextureAtlas>
