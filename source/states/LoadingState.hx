@@ -81,7 +81,7 @@ class LoadingState extends FlxState {
     currentlyLoadedBar.updateHitbox();
   }
 
-  inline function initThread(func:Void->Dynamic, key:String):Void {
+  function initThread(func:Void->Dynamic, key:String):Void {
     currentItemLoading.text = key;
     Thread.create(() -> {
       try {func();}
@@ -129,7 +129,7 @@ class LoadingState extends FlxState {
     return null;
   }
 
-  inline function checkLoaded():Bool {
+  function checkLoaded():Bool {
 		for (key => bitmap in requestedBitmaps)
 			if (bitmap != null) {
         var tempKey:String = originalBitmapKeys.get(key).substr(14);
