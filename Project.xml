@@ -33,6 +33,12 @@
 	<source path="source" />
 	<assets path="assets" />
 
+	<!-- OpenAL config -->
+	<section if="desktop">
+		<assets path="alsoft.txt" rename="plugins/alsoft.ini" type="text" if="windows"/>
+		<assets path="alsoft.txt" rename="plugins/alsoft.conf" type="text" unless="windows"/>
+	</section>
+
 	<!-- _______________________________ Libraries ______________________________ -->
 
 	<haxelib name="flixel" />
@@ -88,7 +94,6 @@
 
 	<!-- _________________________________ Custom _______________________________ -->
 
-	<!--Place custom nodes like icons here-->
 	<icon path="assets/images/game_icons/icon16.png" size='16'/>
 	<icon path="assets/images/game_icons/icon32.png" size='32'/>
 	<icon path="assets/images/game_icons/icon64.png" size='64'/>
