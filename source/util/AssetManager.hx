@@ -69,7 +69,7 @@ class AssetManager {
 
 		trackedGraphics.set(key, graphic);
     localAssets.push(key);
-    return FlxG.bitmap.addGraphic(graphic);
+    return graphic;
   }
 
 	static function getSparrow(key:String):FlxAtlasFrames {
