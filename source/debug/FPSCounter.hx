@@ -28,7 +28,7 @@ class FPSCounter extends openfl.text.TextField {
 			var memoryMegas:String = formatBytes(Memory.getCurrentUsage());
 			var gpuMegas:String = formatBytes(Memory.getGPUUsage());
 			var garbageMemoryMegas:String = formatBytes(Memory.getGarbageCollection());
-			text += '\nMemory: $memoryMegas\nGPU: $gpuMegas\nGarbage: $garbageMemoryMegas';
+			text += '\nRAM: $memoryMegas\nGPU: $gpuMegas\nGCM: $garbageMemoryMegas';
 		}
 
 		if (FlxG.keys.justPressed.TAB) //check after the current frame has been tracked

@@ -13,6 +13,7 @@ package debug.memory;
 extern
 #end
 class Memory {
+
 	/**
 	 * Returns the peak (maximum so far) resident set size (physical
 	 * memory use) measured in bytes, or zero if the value cannot be
@@ -42,21 +43,21 @@ class Memory {
 	#end
 	static function getCurrentUsage():Float #if !cpp return 0 #end;
 
+	/**
+ 	 * Returns the current graphic processor memory, each graphic grabbed
+	 * from flixel cache, measured in bytes.
+	 */
 	@:access(flixel.system.frontEnds.BitmapFrontEnd._cache)
 	inline static function getGPUUsage():Float {
 		var total:Float = 0;
-		for (key in FlxG.bitmap._cache.keys()) {
-			var graphic:flixel.graphics.FlxGraphic = FlxG.bitmap.get(key);
-			if (graphic == null && AssetManager.trackedGraphics.exists(key)) {
-				graphic = AssetManager.trackedGraphics.get(key);
-				if (graphic == null)
-					continue;
-			}
+		for (key => graphic in FlxG.bitmap._cache)
 			total += graphic.width * graphic.height * 4;
-		}
 		return total;
 	}
 
+	/**
+	 * Returns the current grabage collector's memory measured in bytes.
+	*/
 	inline static function getGarbageCollection():Float {
 		return #if hl hl.Gc.stats().currentMemory #else openfl.system.System.totalMemory #end;
 	}

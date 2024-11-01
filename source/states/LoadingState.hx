@@ -11,7 +11,6 @@ import flash.media.Sound;
 class LoadingState extends FlxState {
 
   var currentlyLoadedBar:FlxSprite;
-  var currentItemLoading:FlxText;
   var mutex:Mutex;
 
   var targetState:FlxState;
@@ -49,40 +48,29 @@ class LoadingState extends FlxState {
     currentlyLoadedBar = new FlxSprite(0, FlxG.height - h).makeGraphic(1, h, 0xffffffff);
     add(currentlyLoadedBar);
 
-    currentItemLoading = new FlxText(0, FlxG.height * .5, FlxG.width, '', Util.trueTextScale(120));
-    add(currentItemLoading);
-    currentItemLoading.setFormat(AssetManager.getFont('FNaS_Font'), currentItemLoading.size, 0xffffffff, 'center', FlxText.FlxTextBorderStyle.OUTLINE, 0x000000);
-    currentItemLoading.borderSize = 0;
-    currentItemLoading.antialiasing = false;
-
     super.create();
 
     mutex = new Mutex();
-    for (i in images) initThread(function():Null<BitmapData> return preloadBitmapData(i), 'BITMAPDATA\n"$i"');
-    for (i in music.concat(sounds)) initThread(function():Null<Sound> return preloadSound(i), 'SOUND\n"$i"');
+    for (i in images) initThread(() -> preloadBitmapData(i));
+    for (i in music.concat(sounds)) initThread(() -> preloadSound(i));
   }
 
   var done:Bool = false;
-  var percent:Float = 0;
   override function update(elapsed:Float):Void {
     super.update(elapsed);
-
     if (!done) {
       var isLoaded:Bool = checkLoaded();
-      percent = currentlyLoaded / loadLimit;
+      currentlyLoadedBar.scale.x = FlxG.width * 2 * (currentlyLoaded / loadLimit);
+      currentlyLoadedBar.updateHitbox();
       if (isLoaded) {
         done = true;
         FlxG.switchState(targetState);
         return;
       }
     }
-
-    currentlyLoadedBar.scale.x = FlxG.width * 2 * percent;
-    currentlyLoadedBar.updateHitbox();
   }
 
-  function initThread(func:Void->Dynamic, key:String):Void {
-    currentItemLoading.text = key;
+  function initThread(func:Void->Void):Void {
     Thread.create(() -> {
       try {func();}
       mutex.acquire();
@@ -92,7 +80,7 @@ class LoadingState extends FlxState {
   }
 
   @:access(flixel.system.frontEnds.BitmapFrontEnd._cache)
-  function preloadBitmapData(key:String):Null<BitmapData> {
+  function preloadBitmapData(key:String):Void {
     key += '.png';
     try {
       if (!AssetManager.trackedGraphics.exists(key) && OpenFlAssets.exists(key, IMAGE)) {
@@ -101,32 +89,22 @@ class LoadingState extends FlxState {
         requestedBitmaps.set(key, bitmap);
         originalBitmapKeys.set(key, key);
         mutex.release();
-        return bitmap;
       }
-      if (AssetManager.trackedGraphics.get(key) == null && FlxG.bitmap._cache.exists(key))
-        AssetManager.trackedGraphics.set(key, FlxG.bitmap.get(key));
-      return AssetManager.trackedGraphics.get(key).bitmap;
     }
-    return null;
   }
 
-  function preloadSound(key:String):Null<Sound> {
+  function preloadSound(key:String):Void {
     key += '.ogg';
     try {
-      if (!AssetManager.trackedAudio.exists(key)) {
-        if (OpenFlAssets.exists(key, SOUND)) {
-          mutex.acquire();
-          AssetManager.trackedAudio.set(key, OpenFlAssets.getSound(key, false));
-          mutex.release();
-        } else
-          return flixel.system.FlxAssets.getSound('flixel/sounds/beep');
+      if (!AssetManager.trackedAudio.exists(key) && OpenFlAssets.exists(key, SOUND)) {
+        mutex.acquire();
+        AssetManager.trackedAudio.set(key, OpenFlAssets.getSound(key, false));
+        mutex.release();
       }
       mutex.acquire();
       AssetManager.localAssets.push(key);
       mutex.release();
-      return AssetManager.trackedAudio.get(key);
     }
-    return null;
   }
 
   function checkLoaded():Bool {
@@ -135,7 +113,6 @@ class LoadingState extends FlxState {
         var tempKey:String = originalBitmapKeys.get(key).substr(14);
         AssetManager.getImage(tempKey.substr(0, tempKey.length - 4));
       }
-
 		requestedBitmaps.clear();
 		originalBitmapKeys.clear();
     return currentlyLoaded == loadLimit;
