@@ -4,20 +4,19 @@ import debug.memory.Memory;
 
 class FPSCounter extends openfl.text.TextField {
 
-	var showMemoryStats:Bool = false;
-
 	public function new():Void {
 		super();
 		x = FlxG.width * .01;
 		y = FlxG.height * .01;
 		selectable = mouseEnabled = false;
-		defaultTextFormat = new openfl.text.TextFormat(AssetManager.getFont('FNaS_Font'), Util.trueTextScale(60), 0xffffffff);
+		defaultTextFormat = new openfl.text.TextFormat('assets/fonts/FNaS_Font.ttf', Util.trueTextScale(60), 0xffffffff);
 		autoSize = LEFT;
 		multiline = true;
 	}
 
 	var times:Array<Float> = [];
 	var curTime:Float = 0;
+	var showMemoryStats:Bool = false;
 	override function __enterFrame(deltaTime:Float):Void {
 		curTime += deltaTime;
 		times.push(curTime);

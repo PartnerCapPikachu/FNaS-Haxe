@@ -100,8 +100,4 @@ class AssetManager {
 		return trackedAudio.get(file);
 	}
 
-	static function getFont(key:String):String {
-		return 'assets/fonts/$key.ttf';
-	}
-
 }
