@@ -57,7 +57,7 @@ class Memory {
 
 	/**
 	 * Returns the current grabage collector's memory measured in bytes.
-	*/
+	 */
 	inline static function getGarbageCollection():Float {
 		return #if hl hl.Gc.stats().currentMemory #else openfl.system.System.totalMemory #end;
 	}

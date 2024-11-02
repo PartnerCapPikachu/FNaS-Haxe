@@ -86,10 +86,9 @@ class TitleState extends FlxState {
     super.update(elapsed);
 
     var overlapping:Bool = false;
-    for (option in optionsGrp.members) {
+    for (option in optionsGrp.members)
       if (FlxG.mouse.overlaps(option)) {
         overlapping = true;
-
         var oldSelected:Int = curSelected;
         curSelected = optionsGrp.members.indexOf(option);
         if (!playedSound && curSelected != oldSelected) {
@@ -98,19 +97,17 @@ class TitleState extends FlxState {
           break;
         }
       }
-    }
     if (!overlapping) {
       curSelected = -1;
       playedSound = false;
     }
 
-    if (FlxG.mouse.justPressed) {
+    if (FlxG.mouse.justPressed)
       switch (curSelected) {
         case 0:
           trace('LoadingState loads here.');
           //FlxG.switchState(new LoadingState());
       }
-    }
   }
 
 }

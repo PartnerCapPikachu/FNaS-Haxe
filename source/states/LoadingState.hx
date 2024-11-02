@@ -58,15 +58,15 @@ class LoadingState extends FlxState {
   var done:Bool = false;
   override function update(elapsed:Float):Void {
     super.update(elapsed);
-    if (!done) {
-      var isLoaded:Bool = checkLoaded();
-      currentlyLoadedBar.scale.x = FlxG.width * 2 * (currentlyLoaded / loadLimit);
-      currentlyLoadedBar.updateHitbox();
-      if (isLoaded) {
-        done = true;
-        FlxG.switchState(targetState);
-        return;
-      }
+    if (done)
+      return;
+    var isLoaded:Bool = checkLoaded();
+    currentlyLoadedBar.scale.x = FlxG.width * 2 * (currentlyLoaded / loadLimit);
+    currentlyLoadedBar.updateHitbox();
+    if (isLoaded) {
+      done = true;
+      FlxG.switchState(targetState);
+      return;
     }
   }
 
@@ -83,26 +83,23 @@ class LoadingState extends FlxState {
   function preloadBitmapData(key:String):Void {
     key += '.png';
     try {
+      mutex.acquire();
       if (!AssetManager.trackedGraphics.exists(key) && OpenFlAssets.exists(key, IMAGE)) {
-        var bitmap:BitmapData = OpenFlAssets.getBitmapData(key, false);
-        mutex.acquire();
-        requestedBitmaps.set(key, bitmap);
+        requestedBitmaps.set(key, OpenFlAssets.getBitmapData(key, false));
         originalBitmapKeys.set(key, key);
-        mutex.release();
       }
+      mutex.release();
     }
   }
 
   function preloadSound(key:String):Void {
     key += '.ogg';
     try {
-      if (!AssetManager.trackedAudio.exists(key) && OpenFlAssets.exists(key, SOUND)) {
-        mutex.acquire();
-        AssetManager.trackedAudio.set(key, OpenFlAssets.getSound(key, false));
-        mutex.release();
-      }
       mutex.acquire();
-      AssetManager.localAssets.push(key);
+      if (!AssetManager.trackedAudio.exists(key) && OpenFlAssets.exists(key, SOUND)) {
+        AssetManager.localAssets.push(key);
+        AssetManager.trackedAudio.set(key, OpenFlAssets.getSound(key, false));
+      }
       mutex.release();
     }
   }

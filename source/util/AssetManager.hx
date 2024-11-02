@@ -4,6 +4,8 @@ import openfl.utils.AssetType;
 import openfl.utils.Assets as OpenFlAssets;
 import lime.utils.Assets;
 
+import openfl.display.BitmapData;
+
 import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxAtlasFrames;
 
@@ -19,27 +21,25 @@ class AssetManager {
   static var localAssets:Array<String> = [];
 
 	static function clearUnused():Void {
-		for (key in trackedGraphics.keys()) {
-			if (!localAssets.contains(key) && FlxG.bitmap._cache.exists(key)) {
-				destroyGraphic(trackedGraphics.get(key));
+		for (key => graphic in trackedGraphics)
+			if (!localAssets.contains(key)) {
 				trackedGraphics.remove(key);
+				destroyGraphic(graphic);
 			}
-		}
 		openfl.system.System.gc();
 	}
 
 	static function clearUsed():Void {
-		for (key in FlxG.bitmap._cache.keys())
+		for (key => graphic in FlxG.bitmap._cache)
 			if (!trackedGraphics.exists(key))
-				destroyGraphic(FlxG.bitmap.get(key));
+				destroyGraphic(graphic);
 
-		for (key in trackedAudio.keys()) {
+		for (key => ogg in trackedAudio)
 			if (!localAssets.contains(key)) {
 				Assets.cache.clear(key);
-				trackedAudio.get(key).close();
 				trackedAudio.remove(key);
+				ogg.close();
 			}
-		}
 
 		localAssets = [];
 	}
@@ -57,11 +57,10 @@ class AssetManager {
 			return trackedGraphics.get(key);
 
 		var file:String = 'assets/images/$key';
-		var bitmap:openfl.display.BitmapData = null;
-		if (OpenFlAssets.exists(file, IMAGE))
-			bitmap = OpenFlAssets.getBitmapData(file);
-		if (bitmap == null)
-			return null;
+		var bitmap:BitmapData;
+		OpenFlAssets.exists(file, IMAGE) ? bitmap = OpenFlAssets.getBitmapData(file) : return null;
+		if (bitmap.image != null)
+			bitmap.disposeImage();
 
 		var graphic:FlxGraphic = FlxGraphic.fromBitmapData(bitmap, false, key);
 		graphic.persist = true;
