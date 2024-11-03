@@ -9,8 +9,7 @@ The config overrides a few global OpenALSoft settings with the aim of improving 
 @:keep class ALSoftConfig {
 	#if desktop
 	public static function __init__():Void {
-		var origin:String = #if hl Sys.getCwd() #else Sys.programPath() #end;
-		var configPath:String = origin.withoutExtension().directory();
+		var configPath:String = (#if hl Sys.getCwd() #else Sys.programPath() #end).withoutExtension().directory();
 		#if windows
 		configPath += '/plugins/alsoft.ini';
 		#elseif mac

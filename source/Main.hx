@@ -5,6 +5,7 @@ import debug.ALSoftConfig; //audio fix
 import openfl.events.UncaughtErrorEvent;
 
 class Main extends openfl.display.Sprite {
+
 	public function new():Void {
 		super();
 		addChild(new flixel.FlxGame(FlxG.width, FlxG.height, states.IntroState #if (flixel < '5.0.0') 1, #end, 60, 60, true, false));
@@ -17,14 +18,13 @@ class Main extends openfl.display.Sprite {
 		var errorPath:String = crashLocation + 'FNaSH_' + Date.now().toString().replace(' ', '_').replace(':', '\'');
 
 		var errorMessage:String = '';
-		for (i in haxe.CallStack.exceptionStack(true)) {
+		for (i in haxe.CallStack.exceptionStack(true))
 			switch (i) {
 				case FilePos(s, file, line, column):
 					errorMessage += '$file (line $line)\n';
 				default:
 					trace(i);
 			}
-		}
 		errorMessage += '\n\nUncaught Error: ' + error.error + '\nCRASH HANDLER ORIGINALLY WRITTEN BY sqirra-rng';
 
 		if (!FileSystem.exists(crashLocation))
@@ -34,4 +34,5 @@ class Main extends openfl.display.Sprite {
 		lime.app.Application.current.window.alert(errorMessage, 'Uncaught Error!');
 		Sys.exit(1);
 	}
+
 }

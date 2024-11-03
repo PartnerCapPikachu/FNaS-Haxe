@@ -5,7 +5,6 @@ import openfl.utils.Assets as OpenFlAssets;
 import lime.utils.Assets;
 
 import openfl.display.BitmapData;
-
 import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxAtlasFrames;
 
@@ -25,38 +24,46 @@ class AssetManager {
 			if (!localAssets.contains(key)) {
 				trackedGraphics.remove(key);
 				destroyGraphic(graphic);
+				trace('graphic "$key" not locally tracked; destroyed');
 			}
 		openfl.system.System.gc();
 	}
 
 	static function clearUsed():Void {
 		for (key => graphic in FlxG.bitmap._cache)
-			if (!trackedGraphics.exists(key))
+			if (!trackedGraphics.exists(key)) {
 				destroyGraphic(graphic);
+				trace('graphic "$key" not internally tracked; destroyed');
+			}
 
 		for (key => ogg in trackedAudio)
 			if (!localAssets.contains(key)) {
-				Assets.cache.clear(key);
 				trackedAudio.remove(key);
-				ogg.close();
+				Assets.cache.clear(key);
+				trace('ogg "$key" not locally tracked; destroyed');
 			}
 
 		localAssets = [];
 	}
 
-	static function destroyGraphic(graphic:FlxGraphic):Void {
+	inline static function destroyGraphic(graphic:FlxGraphic):Void {
 		graphic.destroyOnNoUse = true;
 		graphic.persist = false;
 		graphic.decrementUseCount();
 	}
 
-  static function getImage(key:String):FlxGraphic {
+  inline static function getImage(key:String):FlxGraphic {
     key += '.png';
+    return trackedGraphics.exists(key) ? trackedGraphics.get(key) : getGraphic(key);
+  }
 
-    if (trackedGraphics.exists(key))
-			return trackedGraphics.get(key);
+	inline static function getSparrow(key:String):FlxAtlasFrames {
+		return FlxAtlasFrames.fromSparrow(getImage(key), 'assets/images/$key.xml');
+	}
 
+	static function getGraphic(key:String):FlxGraphic {
 		var file:String = 'assets/images/$key';
+
 		var bitmap:BitmapData;
 		OpenFlAssets.exists(file, IMAGE) ? bitmap = OpenFlAssets.getBitmapData(file) : return null;
 		if (bitmap.image != null)
@@ -69,17 +76,13 @@ class AssetManager {
 		trackedGraphics.set(key, graphic);
     localAssets.push(key);
     return graphic;
-  }
-
-	static function getSparrow(key:String):FlxAtlasFrames {
-		return FlxAtlasFrames.fromSparrow(getImage(key), 'assets/images/$key.xml');
 	}
 
-	static function getSound(key:String):Sound {
+	inline static function getSound(key:String):Sound {
 		return getOgg('sounds/$key');
 	}
 
-	static function getMusic(key:String):Sound {
+	inline static function getMusic(key:String):Sound {
 		return getOgg('music/$key');
 	}
 

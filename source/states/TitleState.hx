@@ -1,9 +1,5 @@
 package states;
 
-/* TODO
-  * Atlas spreadsheets?
-**/
-
 import flixel.group.FlxSpriteGroup;
 
 class TitleState extends FlxState {
@@ -26,7 +22,14 @@ class TitleState extends FlxState {
   var night:FlxSprite;
   var curNight:FlxSprite;
 
+  var CacheLoadingState:LoadingState;
+
+  var optionSound:flash.media.Sound;
+
   override function create():Void {
+    AssetManager.clearUsed();
+    AssetManager.clearUnused();
+
     titleGrp = new FlxSpriteGroup();
     optionsGrp = new FlxSpriteGroup();
     miscGrp = new FlxSpriteGroup();
@@ -75,15 +78,21 @@ class TitleState extends FlxState {
     curNight.setPosition(night.x + night.width, night.y);
     miscGrp.add(curNight);
 
-    FlxG.sound.playMusic(AssetManager.getMusic('title'), .5, true);
     super.create();
+    FlxG.sound.playMusic(AssetManager.getMusic('title'), .5, true);
+    optionSound = AssetManager.getSound('multipurpose/camera_option_change');
+
+    //will cache nothing for now
+    CacheLoadingState = new LoadingState(new PlayState(), null, null, null);
   }
 
-  var optionSound:flash.media.Sound = AssetManager.getSound('multipurpose/camera_option_change');
   var curSelected:Int = -1;
   var playedSound:Bool = false;
+  var loadingPlayState:Bool = false;
   override function update(elapsed:Float):Void {
     super.update(elapsed);
+    if (loadingPlayState)
+      return;
 
     var overlapping:Bool = false;
     for (option in optionsGrp.members)
@@ -102,12 +111,16 @@ class TitleState extends FlxState {
       playedSound = false;
     }
 
-    if (FlxG.mouse.justPressed)
-      switch (curSelected) {
-        case 0:
-          trace('LoadingState loads here.');
-          //FlxG.switchState(new LoadingState());
-      }
+    if (FlxG.mouse.justPressed && curSelected != -1) {
+      loadingPlayState = true;
+      FlxG.sound.music.stop();
+
+      //switch case curSelected (handle game save)
+      //0 = new game, 1 = load latest night, 2 = load night 6 (if unlocked)
+      FlxG.switchState(CacheLoadingState);
+      AssetManager.clearUsed();
+      AssetManager.clearUnused();
+    }
   }
 
 }

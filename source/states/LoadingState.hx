@@ -14,7 +14,6 @@ class LoadingState extends FlxState {
   var mutex:Mutex;
 
   var targetState:FlxState;
-  var destroyPreviousAssets:Bool;
 
   var images:Array<String>;
   var music:Array<String>;
@@ -26,23 +25,17 @@ class LoadingState extends FlxState {
   var currentlyLoaded:Int = 0;
   var loadLimit:Int = 0;
 
-  override public function new(targetState:FlxState, ?images:Array<String>, ?music:Array<String>, ?sounds:Array<String>, destroyPreviousAssets:Bool = true):Void {
+  override public function new(targetState:FlxState, ?images:Array<String>, ?music:Array<String>, ?sounds:Array<String>):Void {
     this.targetState = targetState;
     this.images = images ?? [];
     this.music = music ?? [];
     this.sounds = sounds ?? [];
     loadLimit = this.images.length + this.music.length + this.sounds.length;
-    this.destroyPreviousAssets = destroyPreviousAssets;
     super();
   }
 
   override function create():Void {
     persistentUpdate = true;
-
-    if (destroyPreviousAssets) {
-      AssetManager.clearUsed();
-      AssetManager.clearUnused();
-    }
 
     var h:Int = Math.floor(FlxG.height * .01);
     currentlyLoadedBar = new FlxSprite(0, FlxG.height - h).makeGraphic(1, h, 0xffffffff);
@@ -108,7 +101,7 @@ class LoadingState extends FlxState {
 		for (key => bitmap in requestedBitmaps)
 			if (bitmap != null) {
         var tempKey:String = originalBitmapKeys.get(key).substr(14);
-        AssetManager.getImage(tempKey.substr(0, tempKey.length - 4));
+        AssetManager.getGraphic(tempKey.substr(0, tempKey.length - 4));
       }
 		requestedBitmaps.clear();
 		originalBitmapKeys.clear();
