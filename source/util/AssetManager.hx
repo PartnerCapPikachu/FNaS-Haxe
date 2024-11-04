@@ -1,7 +1,6 @@
 package util;
 
 import openfl.utils.AssetType;
-import openfl.utils.Assets as OpenFlAssets;
 import lime.utils.Assets;
 
 import openfl.display.BitmapData;
@@ -61,7 +60,7 @@ class AssetManager {
 		var file:String = 'assets/images/$key';
 
 		var bitmap:BitmapData;
-		OpenFlAssets.exists(file, IMAGE) ? bitmap = OpenFlAssets.getBitmapData(file) : return null;
+		FileSystem.exists(file) ? bitmap = BitmapData.fromFile(file) : return null;
 		if (bitmap.image != null)
 			bitmap.disposeImage();
 
@@ -86,9 +85,9 @@ class AssetManager {
 		var file:String = 'assets/$key.ogg';
 
 		if (!trackedAudio.exists(file)) {
-			if (OpenFlAssets.exists(file, SOUND)) {
+			if (FileSystem.exists(file)) {
 				localAssets.push(file);
-				trackedAudio.set(file, OpenFlAssets.getSound(file));
+				trackedAudio.set(file, Sound.fromFile(file));
 			}
 			else
 				return flixel.system.FlxAssets.getSound('flixel/sounds/beep');

@@ -4,7 +4,6 @@ import sys.thread.Thread;
 import sys.thread.Mutex;
 
 import openfl.utils.AssetType;
-import openfl.utils.Assets as OpenFlAssets;
 import openfl.display.BitmapData;
 import flash.media.Sound;
 
@@ -78,8 +77,12 @@ class LoadingState extends FlxState {
   function preloadBitmapData(key:String) {
     try {
       key += '.png';
-      if (!AssetManager.trackedGraphics.exists(key.substr(14)) && OpenFlAssets.exists(key, IMAGE))
-        requestedBitmaps.set(key, OpenFlAssets.getBitmapData(key, false));
+      if (!AssetManager.trackedGraphics.exists(key.substr(14)) && FileSystem.exists(key)) {
+        var bitmap:BitmapData = BitmapData.fromFile(key);
+        if (bitmap.image != null)
+          bitmap.disposeImage();
+        requestedBitmaps.set(key, bitmap);
+      }
     }
   }
 
