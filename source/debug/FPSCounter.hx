@@ -1,7 +1,5 @@
 package debug;
 
-import debug.memory.Memory;
-
 class FPSCounter extends openfl.text.TextField {
 
 	public function new():Void {
@@ -16,22 +14,12 @@ class FPSCounter extends openfl.text.TextField {
 
 	var times:Array<Float> = [];
 	var curTime:Float = 0;
-	var showMemoryStats:Bool = false;
 	override function __enterFrame(deltaTime:Float):Void {
 		curTime += deltaTime;
 		times.push(curTime);
-		while (times[0] < curTime - 1000) times.shift();
-
-		text = 'FPS: ' + times.length;
-		if (showMemoryStats) {
-			var memoryMegas:String = formatBytes(Memory.getCurrentUsage());
-			var gpuMegas:String = formatBytes(Memory.getGPUUsage());
-			var garbageMemoryMegas:String = formatBytes(Memory.getGarbageCollection());
-			text += '\nRAM: $memoryMegas\nGPU: $gpuMegas\nGCM: $garbageMemoryMegas';
-		}
-
-		if (FlxG.keys.justPressed.TAB) //check after the current frame has been tracked
-			showMemoryStats = !showMemoryStats;
+		while (times[0] < curTime - 1000)
+			times.shift();
+		text = 'FPS: ' + times.length + '\nRAM: ' + formatBytes(debug.memory.Memory.getCurrentUsage());
 	}
 
 	var unitsOfMemory:Array<String> = ['', 'K', 'M', 'G', 'T', 'P'];

@@ -27,9 +27,6 @@ class TitleState extends FlxState {
   var optionSound:flash.media.Sound;
 
   override function create():Void {
-    AssetManager.clearUsed();
-    AssetManager.clearUnused();
-
     titleGrp = new FlxSpriteGroup();
     optionsGrp = new FlxSpriteGroup();
     miscGrp = new FlxSpriteGroup();
@@ -118,8 +115,6 @@ class TitleState extends FlxState {
       //switch case curSelected (handle game save)
       //0 = new game, 1 = load latest night, 2 = load night 6 (if unlocked)
       FlxG.switchState(CacheLoadingState);
-      AssetManager.clearUsed();
-      AssetManager.clearUnused();
     }
   }
 

@@ -24,23 +24,19 @@ class AssetManager {
 			if (!localAssets.contains(key)) {
 				trackedGraphics.remove(key);
 				destroyGraphic(graphic);
-				trace('graphic "$key" not locally tracked; destroyed');
 			}
 		openfl.system.System.gc();
 	}
 
 	static function clearUsed():Void {
 		for (key => graphic in FlxG.bitmap._cache)
-			if (!trackedGraphics.exists(key)) {
+			if (!trackedGraphics.exists(key))
 				destroyGraphic(graphic);
-				trace('graphic "$key" not internally tracked; destroyed');
-			}
 
 		for (key => ogg in trackedAudio)
 			if (!localAssets.contains(key)) {
 				trackedAudio.remove(key);
 				Assets.cache.clear(key);
-				trace('ogg "$key" not locally tracked; destroyed');
 			}
 
 		localAssets = [];
