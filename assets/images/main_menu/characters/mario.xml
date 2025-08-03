@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Free texture packer v0.6.7 http://free-tex-packer.com -->
-
-<TextureAtlas imagePath="mario.png" width="137" height="788">
-  <SubTexture name="marioNormal0000" x="0" y="0"  width="137" height="394" frameX="-0" frameY="-0" frameWidth="137" frameHeight="394"/>
-  <SubTexture name="marioScary0000" x="0" y="394"  width="137" height="394" frameX="-0" frameY="-0" frameWidth="137" frameHeight="394"/>
-</TextureAtlas>
