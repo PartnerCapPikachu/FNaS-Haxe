@@ -5,8 +5,8 @@ import lime.app.Application;
 #if (cpp && windows)
 @:buildXml('
 	<target id="haxe">
-		<lib name="dwmapi.lib" if="windows"/>
-		<lib name="gdi32.lib" if="windows"/>
+		<lib name="dwmapi.lib"/>
+		<lib name="gdi32.lib"/>
 	</target>
 ')
 @:cppFileCode('

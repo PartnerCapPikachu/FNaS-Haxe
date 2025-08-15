@@ -1,4 +1,6 @@
 [general]
+channels=stereo
+period_size=441
 sample-type=float32
 stereo-mode=speakers
 stereo-encoding=panpot
@@ -8,6 +10,10 @@ resampler=fast_bsinc24
 front-stablizer=false
 output-limiter=false
 volume-adjust=0
+
+[pulse]
+allow-moves=true
+
 [decoder]
 hq-mode=false
 distance-comp=false

@@ -8,15 +8,8 @@ package debug.memory;
  */
 @:publicFields
 #if cpp
-@:buildXml('
-	<xml>
-		<set name="PROJECT_DIR" value="$${this_dir}"/>
-		<files id=\'haxe\'>
-			<compilervalue name="-I" value="$${PROJECT_DIR}/include/"/>
-		</files>
-	</xml>
-')
-@:include('memory.h')
+@:buildXml('<include name="../../../source/debug/memory/Build.xml"/>')
+@:include('memory.hpp')
 extern
 #end
 class Memory

@@ -3,7 +3,7 @@
 
 	<!-- _________________________ Application Settings _________________________ -->
 
-	<app title="Five Nights at Sonic's Haxe" file="FNaS_Haxe" main="Main" version="0.0.1" company="Pumpsuki"/>
+	<app title="Five Nights at Sonic's Haxe" file="FNaS" main="Main" version="0.0.1" company="Pumpsuki"/>
 
 	<!--The flixel preloader is not accurate in Chrome. You can use it regularly if you embed the swf into a html file
 		or you can set the actual size of your file manually at "FlxPreloaderBase-onUpdate-bytesTotal"-->
@@ -45,7 +45,7 @@
 	<!-- ______________________________ Haxedefines _____________________________ -->
 
 	<!--Remove the legacy health system-->
-	<haxedef name="FLX_NO_HEALTH"/>
+	<!-- <haxedef name="FLX_NO_HEALTH"/> -->
 
 	<!--Optimise inputs, be careful you will get null errors if you don't use conditionals in your game-->
 	<haxedef name="FLX_NO_MOUSE" if="mobile"/>
@@ -63,11 +63,21 @@
 	<!-- pretty (haxeflixel default), indent, classic (haxe compiler default) -->
 	<haxedef name="message.reporting" value="pretty"/>
 
+	<!--Release build-->
+	<haxedef name="analyzer-optimize"/>
+	<haxedef name="dce" value="full"/>
+	<haxedef name="no-debug"/>
+	<haxedef name="no-deprecation-warnings"/>
+	<haxedef name="no-traces"/>
+	<haxedef name="release"/>
+
+	<!--Macro fixes-->
+	<haxeflag name="--macro" value="allowPackage('flash')"/>
+	<haxeflag name="--macro" value="include('my.pack')"/>
+
 	<!-- _________________________________ Custom _______________________________ -->
 
-	<icon path="assets/images/game_icons/icon16.png" size='16'/>
-	<icon path="assets/images/game_icons/icon32.png" size='32'/>
-	<icon path="assets/images/game_icons/icon64.png" size='64'/>
-	<icon path="assets/images/game_icons/icon256.png" size='256'/>
+	<icon path="icons/icon16.png" size='16'/>
+	<icon path="icons/icon32.png" size='32'/>
 
 </project>

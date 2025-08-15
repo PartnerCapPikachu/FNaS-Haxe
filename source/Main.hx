@@ -29,7 +29,7 @@ class Main extends openfl.display.Sprite
 
     Native.fixScaling();
 
-    addChild(new FlxGame(500, 500, Init, 60, 60, false, true));
-    addChild(new debug.FPSCounter());
+    addChild(new FlxGame(500, 500, Init, 60, 60, true, false));
+    addChild(new debug.FPS());
   }
 }

@@ -32,8 +32,11 @@ class AssetManager
 
 	static function clearUnused():Void
 	{
-		for (key in [for (key => asset in trackedGraphics) (!localAssets.contains(key) && !excludeFromDump.contains(key)) key])
+		for (key in trackedGraphics.keys())
 		{
+			if (localAssets.contains(key) || excludeFromDump.contains(key))
+				continue;
+
 			var graphic:FlxGraphic = trackedGraphics[key];
 			if (graphic != null)
 			{
@@ -47,8 +50,11 @@ class AssetManager
 
 	static function clearUsed():Void
 	{
-		for (key in [for (key => asset in trackedAudio) (!excludeFromDump.contains(key)) key])
+		for (key in trackedAudio.keys())
 		{
+			if (excludeFromDump.contains(key))
+				continue;
+
 			var sound:Sound = trackedAudio[key];
 			trackedAudio.remove(key);
 			openfl.Assets.cache.removeSound(key);
@@ -85,32 +91,11 @@ class AssetManager
 		}
 
 		if (!FileSystem.exists(path))
-		{
-			trace('Warning: Missing image "$path"');
-			return fallbackGraphic;
-		}
+			return null;
 
 		graphic = FlxGraphic.fromBitmapData(getBitmap(path), false, path);
 		trackedGraphics.set(path, graphic);
 		markUsed(path);
-		return graphic;
-	}
-
-	static var fallbackGraphic(get, never):FlxGraphic;
-	static function get_fallbackGraphic():FlxGraphic
-	{
-		if (trackedGraphics.exists('__fallback__'))
-			return trackedGraphics['__fallback__'];
-
-		var bitmap:BitmapData = new BitmapData(16, 16, false, 0xff00ff00);
-		for (x in 0...16)
-			for (y in 0...16)
-				if ((x < 8 && y < 8) || (x >= 8 && y >= 8))
-					bitmap.setPixel(x, y, 0x0);
-
-		var graphic:FlxGraphic = FlxGraphic.fromBitmapData(bitmap, false, '__fallback__');
-		trackedGraphics.set('__fallback__', graphic);
-		markUsed('__fallback__');
 		return graphic;
 	}
 
